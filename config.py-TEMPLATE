@@ -14,3 +14,7 @@ FIN_DOCS = {
         }
 FIN_GROUPS = {
     }
+STADIUMS_SCRAPE = {
+        }
+MANAGERS_SCRAPE = {
+        }
