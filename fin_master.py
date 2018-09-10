@@ -31,7 +31,7 @@ import config
 pd.set_option('display.max_columns', 500)
 pd.set_option('display.expand_frame_repr', False)
 
-source_path = config.SOURCE_DIR+"/snt" #"../../finances"
+source_path = config.SOURCE_DIR+"/snt"
 account_dict = config.FIN_ACCOUNTS
 finances_dict = config.FIN_DOCS
 group_dict = config.FIN_GROUPS
@@ -187,7 +187,6 @@ def data_validator(df):
         sys.exit("Significant diffs found in Balance vs Transactions")
 
 def get_account_data():
-    print "Step 3: GET ACCOUNT DATA..."
     ### TODO handle other account formats
 
     previous_account = ""
@@ -248,7 +247,7 @@ def get_feature_vector():
 def evaluate_algorithms():
     dataset = get_legacy_data()
     dataset['Category_Group'] = dataset['Category'].map(group_dict)
-    dataset['Category_Group'].fillna(config.FIN_GROUPS["Unknown"],, inplace=True)
+    dataset['Category_Group'].fillna(config.FIN_GROUPS["Unknown"], inplace=True)
 
     #array = dataset[["Transaction", "Amount", "Balance", "DateKey", "Category_Group"]].values
     array = dataset[["Transaction", "Amount", "Category_Group"]].values
@@ -326,7 +325,6 @@ def evaluate_algorithms():
 #    print(classification_report(Y_validation, predictions))
 
 def get_new_files():
-    print "Step 2: GET NEW FILES..."
     for filename in os.listdir(config.DOWNLOAD_DIR):
         #print filename
         if filename.startswith(tuple(account_dict.keys())):
@@ -349,7 +347,6 @@ def check_thing():
         return thing
 
 def archive_files():
-    print "Step 2: ARCHIVE FILES..."
     thing=check_thing()
 
     zPath="C:\Program Files\\7-Zip"
@@ -376,7 +373,6 @@ def archive_files():
             os.remove(fileloc)
 
 def extract_files():
-    print "Step 1: EXTRACTING ARCHIVE FILES..."
     thing=check_thing()
 
     for zipprefix, zipfolder in finances_dict.iteritems():
@@ -448,8 +444,17 @@ def export_viz(df):
     ### 2. Monthly P&L (Sum of Transaction, Joint, all months)
     ### 3. Monthly transactions by Category (Sum of Amount, 3/4 months)
 
+def open_and_wait():
+    # print "call Popen"
+    # proc1 = subprocess.Popen(r"C:\Windows\System32\calc.exe", shell=True))
+    proc1 = subprocess.Popen(["start", config.MASTER_FILES["fin_datasheet"]], shell=True)
+    # proc2 = subprocess.Popen(r"C:\Windows\System32\calc.exe", shell=True))
+    proc2 = subprocess.Popen(["start", config.MASTER_FILES["fin_budget_output"]], shell=True)
+    # print "wait for close"
+    exit_codes = [p.wait() for p in proc1, proc2]
+    # print "all done"
+
 def send_for_analysis():
-    print "Step 4: SEND FOR ANALYSIS..."
     df = get_master()
 
     update_fin_analysis(df)
@@ -459,6 +464,8 @@ def send_for_analysis():
     update_budget_planner(df)
 
     export_viz(df)
+
+    open_and_wait()
 
 def main():
     ### test components
@@ -472,12 +479,18 @@ def main():
     #func_account("BLAH")
     #data_validator(get_master())
     #export_viz(get_master())
+    # open_and_wait()
 
     ### end 2 end
-    # extract_files()
-    # get_new_files()
-    # get_account_data()
-    # send_for_analysis()
+    print "Step 1: EXTRACTING ARCHIVED FILES..."
+    extract_files()
+    print "Step 2: GET NEW FILES..."
+    get_new_files()
+    print "Step 3: GET ACCOUNT DATA..."
+    get_account_data()
+    print "Step 4: SEND FOR ANALYSIS..."
+    send_for_analysis()
+    print "Step 5: ARCHIVE FILES..."
     archive_files()
 
 if __name__ == '__main__':
