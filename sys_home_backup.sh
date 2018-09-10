@@ -1,18 +1,17 @@
-
-
-# #Best of both worlds - fill gaps on C: and E:
-# rsync -avhu --progress /drives/C/Users/BLAH/Downloads/ /drives/E/data01/Downloads/
-# rsync -avhu --progress "/drives/C/Users/BLAH/Google Drive/" "/drives/E/data01/Google Drive/"
-# rsync -avhu --progress /drives/C/Users/BLAH/Music/ /drives/E/data01/Music/
-# rsync -avhu --progress /drives/E/data01/Downloads/ /drives/C/Users/BLAH/Downloads/
-# rsync -avhu --progress "/drives/E/data01/Google Drive/" "/drives/C/Users/BLAH/Google Drive/"
-# rsync -avhu --progress /drives/E/data01/Music/ /drives/C/Users/BLAH/Music/
+#!/usr/bin/bash
+LOCAL_STORAGE=/drives/C/Users/BLAH/
+REMOTE_STORAGE=/drives/E/BLAH/
+REMOTE_STORAGE2=/drives/E/BLAH/
+declare -a FOLDER_LIST=("BLAH" "BLAH" "BLAH" "BLAH")
 
 # #Just in case - backup E:
-# rsync -avh --progress /drives/E/data01/ /drives/E/data04/
+# echo rsync -avh --progress ${REMOTE_STORAGE} ${REMOTE_STORAGE2}
 
-#Perfect harmony - replicate C: on E:
-rsync -avh --delete --progress /drives/C/Users/BLAH/Downloads/ /drives/E/data01/Downloads/
-rsync -avh --delete --progress "/drives/C/Users/BLAH/Google Drive/" "/drives/E/data01/Google Drive/"
-rsync -avh --delete --progress /drives/C/Users/BLAH/OneDrive/ /drives/E/data01/OneDrive/
-rsync -avh --delete --progress /drives/C/Users/BLAH/Music/ /drives/E/data01/Music/
+for i in "${FOLDER_LIST[@]}"; do
+	echo "$i"
+	# #Best of both worlds - fill gaps on C: and E:
+	# echo rsync -avhu --progress ${LOCAL_STORAGE}${i}/ ${REMOTE_STORAGE}${i}/
+	# echo rsync -avhu --progress ${REMOTE_STORAGE}${i}/ ${LOCAL_STORAGE}${i}/
+	#Perfect harmony - replicate C: on E:
+	echo rsync -avh --delete --progress ${LOCAL_STORAGE}${i}/ ${REMOTE_STORAGE}${i}/
+done
