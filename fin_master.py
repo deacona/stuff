@@ -37,7 +37,7 @@ finances_dict = config.FIN_DOCS
 group_dict = config.FIN_GROUPS
 
 def get_date_dim(start_date):
-    df = pd.read_excel(config.MASTER_FILE["date_dim"])
+    df = pd.read_excel(config.MASTER_FILES["date_dim"])
     df = df[df["date key"] >= start_date]
     df = df[["full date", "weekday flag", "week begin date",
             "quarter", "last day in month flag", "same day year ago"
@@ -447,9 +447,15 @@ def export_viz(df):
 def open_and_wait():
     # print "call Popen"
     # proc1 = subprocess.Popen(r"C:\Windows\System32\calc.exe", shell=True))
-    proc1 = subprocess.Popen(["start", config.MASTER_FILES["fin_datasheet"]], shell=True)
+    # print config.MASTER_FILES["fin_datasheet"]
+    file1 = config.MASTER_FILES["fin_datasheet"].replace("/", "//")
+    # print file1
+    proc1 = subprocess.Popen(["explorer", file1])
     # proc2 = subprocess.Popen(r"C:\Windows\System32\calc.exe", shell=True))
-    proc2 = subprocess.Popen(["start", config.MASTER_FILES["fin_budget_output"]], shell=True)
+    # print config.MASTER_FILES["fin_budget_output"]
+    file2 = config.MASTER_FILES["fin_budget_output"].replace("/", "//")
+    # print file2
+    proc2 = subprocess.Popen(["explorer", file2])
     # print "wait for close"
     exit_codes = [p.wait() for p in proc1, proc2]
     # print "all done"
@@ -490,8 +496,8 @@ def main():
     get_account_data()
     print "Step 4: SEND FOR ANALYSIS..."
     send_for_analysis()
-    print "Step 5: ARCHIVE FILES..."
-    archive_files()
+    # print "Step 5: ARCHIVE FILES..."
+    # archive_files()
 
 if __name__ == '__main__':
     main()
