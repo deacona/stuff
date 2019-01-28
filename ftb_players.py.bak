@@ -21,7 +21,7 @@ distance_columns = ["Age", "ChancesInvolved", "DefensiveActions", "FoulsCommited
 def df_info(dframe):
     dframe.info()
     #print dframe.describe(include="all")
-    print(list(dframe.columns.values))
+    print list(dframe.columns.values)
     #print dframe #.head(5)
     #print dframe.tail(5)
     #print dframe["PositionGroup"].value_counts()
@@ -64,7 +64,7 @@ def get_players():
 def find_similar():
     players = get_players()
     #print players
-    print("\nNumber of players included: "+str(len(players)))
+    print "\nNumber of players included: "+str(len(players))
 
     # Normalize all of the numeric columns
     players_normalized = (players - players.mean()) / players.std()
@@ -75,7 +75,7 @@ def find_similar():
     #print players_normalized.index.values
     for name in players_normalized.index.values: #["Adam Clayton", "Ben Gibson", "Daniel Ayala", "Tomas Mejias"]:
         #print "\n###############################"
-        print("\n"+name, end=' ')
+        print "\n"+name,
 
         #selected_player = players.loc[name]
         #print selected_player.name
@@ -95,8 +95,8 @@ def find_similar():
         most_similar_players = distance_frame.iloc[1:4]["idx"]
         #most_similar_players = players.loc[nearest_neighbours] #["Name"]
         #print most_similar_players
-        print("... is similar to... ", end=' ')
-        print(list(most_similar_players.index.values))
+        print "... is similar to... ",
+        print list(most_similar_players.index.values)
 
 def make_prediction():
     players = get_players()
@@ -152,13 +152,13 @@ def make_prediction():
 
     # Compute the mean squared error of our predictions.
     mse = (((predictions - actual) ** 2).sum()) / len(predictions)
-    print("\nMean Squared Error:")
-    print(mse)
+    print "\nMean Squared Error:"
+    print mse
 
     actual["Predicted"+pred_col] = predictions
     actual["Diff"] = actual[pred_col] - actual["Predicted"+pred_col]
-    print("\nActual and Predicted "+pred_col+":")
-    print(actual.sort_values(["Diff"], ascending=False))
+    print "\nActual and Predicted "+pred_col+":"
+    print actual.sort_values(["Diff"], ascending=False)
 
 def test_opinions():
     players = get_players()
@@ -170,8 +170,8 @@ def test_opinions():
     players["ShotPercentage"] = (players["NonPenaltyGoalsP90"]+players["PenaltyGoalsP90"].fillna(0)) / players["ShotsOnTargetP90"]
     players = players[["Name", "NonPenaltyGoalsP90", "PenaltyGoalsP90", "ShotsP90", "ShotsOnTargetP90", "ShotAccuracy", "ShotEfficiency", "ShotPercentage"]]
     #df_info(players)
-    print(players.describe())
-    print(players)
+    print players.describe()
+    print players
 
 def main():
     #get_players()
