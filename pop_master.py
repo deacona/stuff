@@ -55,7 +55,7 @@ def get_elections():
     dataframe.dropna(subset=['Year'], inplace=True)
     dataframe['Year'] = dataframe['Year'].astype(int)
     #dataframe.info()
-    #print dataframe.describe(include="all")
+    # print(dataframe.describe(include="all"))
     #print dataframe[:4]
         
     return dataframe[(dataframe['Year'] >= min_year) & (dataframe['Year'] <= max_year)]
@@ -77,7 +77,7 @@ def get_population():
     population['TotalPopulation'] = population['TotalPopulation'].astype(int)
     
     #population.info()
-    #print population.describe(include="all")
+    # print(population.describe(include="all"))
     #print population[['Year','TotalPopulation']].ix[40:65]
     #print population[(population['Year'] >= min_year) & (population['Year'] <= max_year)]
     return population[(population['Year'] >= min_year) & (population['Year'] <= max_year)]
@@ -175,7 +175,7 @@ def do_analysis():
     results['Type'].fillna("Other", inplace=True)
     #print results
     
-    fulldata = pd.concat([results,results_sub,population], ignore_index=True)
+    fulldata = pd.concat([results,results_sub,population], ignore_index=True, sort=True)
     # check for any other large parties to attribute)
     #print fulldata[['Year','Political party','Type','Leader','Votes']][(fulldata['Type']=="Other") & (fulldata['Votes']>=100000)].nlargest(10, 'Votes')
     #test = fulldata[['Year','Political party','Type','Leader','Votes']][(fulldata['Type']=="Other") & (fulldata['Votes']>=100000)].nlargest(2, 'Votes')
@@ -211,27 +211,27 @@ def do_analysis():
     pop_table["Total"] = pop_table["Total"] / 1000000
     #pop_table.info()
     print(pop_table)
-    show_dfplot(pop_table, "Total (millions)", 70, 5, "pop_plot.jpg")
+    show_dfplot(pop_table, "Total (millions)", 70, 5, "pop_plot.png")
     
     print("\n\n% of Population...")
     xpop_table = pop_table.copy()
     xpop_table["Total"] = 100 * xpop_table["Total"].div(xpop_table["Total","Population"], axis=0)
     print(xpop_table)
-    show_dfplot(xpop_table, "% of Population", 100, 5, "pop_xpop_plot.jpg")
+    show_dfplot(xpop_table, "% of Population", 100, 5, "pop_xpop_plot.png")
     
     #time.sleep(20)
     print("\n\n% of Voters...")
     xvot_table = pop_table.copy()
     xvot_table["Total"] = 100 * xvot_table["Total"].div(xvot_table["Total","Voters"], axis=0)
     print(xvot_table)
-    show_dfplot(xvot_table, "% of Voters", 250, 10, "pop_xvot_plot.jpg")
+    show_dfplot(xvot_table, "% of Voters", 250, 10, "pop_xvot_plot.png")
     
     #time.sleep(20)
     print("\n\n% of Progressive Voters...")
     xpro_table = pop_table.copy()
     xpro_table["Total"] = 100 * xpro_table["Total"].div(xpro_table["Total","Progressive"], axis=0)
     print(xpro_table)
-    show_dfplot(xpro_table, "% of Progressive Voters", 650, 20, "pop_xpro_plot.jpg")    
+    show_dfplot(xpro_table, "% of Progressive Voters", 650, 20, "pop_xpro_plot.png")    
 
 def main():
     # get_elections()

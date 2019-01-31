@@ -16,7 +16,7 @@ import hashlib
 from PIL import Image
 from PIL.ExifTags import TAGS
 
-dir_name = 'BLAH'
+dir_name = r'C:\Users\adeacon\picture'
 dpi_min = 90 #300
 
 def findDup(parentFolder):
@@ -132,8 +132,8 @@ def get_image_metadata():
     print("Number of selected images: "+str(image_counter))
 
 def main():
-    #check_names()
-    #find_all_dupes()
+    # check_names()
+    # find_all_dupes()
     get_image_metadata()
 
 if __name__ == '__main__':

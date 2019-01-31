@@ -31,7 +31,7 @@ def df_info(dframe):
 
 def get_players():
     #fetch from master csv
-    df = pd.read_csv(master_file, sep='|')
+    df = pd.read_csv(master_file, sep='|', encoding="ISO-8859-1")
     #filter unwanted records
     df = df[(df["Season"] >= "s1314") & (df["Competition"].isin(["chm","cpo","prm"]))]
     df.dropna(subset=["Name"], inplace=True)
@@ -174,9 +174,9 @@ def test_opinions():
     print(players)
 
 def main():
-    #get_players()
+    # get_players()
     # find_similar()
-    #make_prediction()
+    # make_prediction()
     test_opinions()
 
 if __name__ == '__main__':
