@@ -10,7 +10,7 @@ import logging
 
 logging.basicConfig(format='%(asctime)s - %(levelname)s - %(message)s', level=logging.DEBUG)
 
-addresses = ["6 Chapel Place, Shoreditch", "FindMyPast", "EC2A 3DQ"]
+addresses = ["google london office", "1-13 St Giles High St", "WC2H 8AG"]
 
 
 def get_geocoded_results(address):
