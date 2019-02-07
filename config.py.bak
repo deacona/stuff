@@ -1,0 +1,102 @@
+#!/usr/bin/python -tt
+DOWNLOAD_DIR = r"C:\\Users\\adeacon\\Downloads"
+SOURCE_DIR = r"C:\Users\adeacon\Google Drive\projects\data\source"
+MASTER_DIR = r"C:\Users\adeacon\Google Drive\projects\data\master"
+ANALYSIS_DIR = r"C:\Users\adeacon\Google Drive\projects\analysis"
+MASTER_FILES = {
+	"ftb_players": MASTER_DIR+"\\ps_master.txt",
+	"pop_results": MASTER_DIR+"\\pop_results.txt",
+	"fin_master": MASTER_DIR+"\\fin_master.txt",
+	"fin_legacy": MASTER_DIR+"\\fin_legacy.csv",
+    "date_dim": MASTER_DIR+"\\Ch10-DateDim_AD.xls",
+    "fin_datasheet": ANALYSIS_DIR+"\\fin_analysis_DATA.xlsx",
+    "fin_budget_template": ANALYSIS_DIR+"\\budget_planner_TEMPLATE.xlsx",
+    "fin_budget_output": ANALYSIS_DIR+"\\budget_planner_TEST.xlsx",
+}
+UK_PARTIES = {
+    'Conservative': 'Regressive'
+    , 'UKIP': 'Regressive'
+    , 'BNP': 'Regressive'
+    , 'Referendum': 'Regressive'
+    , 'SNP': 'Progressive'
+    , 'Green': 'Progressive'
+    , 'Labour': 'Progressive'
+    , 'Liberal Democrat': 'Progressive'
+    , 'Liberal': 'Progressive'
+    , 'SDP-Liberal Alliance': 'Progressive'
+    , u'SDP\u2013Liberal Alliance': 'Progressive'
+    , 'Plaid Cymru': 'Progressive'
+    }
+#UK_PARTIES = {
+#    'Conservative': 'Conservative'
+#    , 'Labour': 'Labour'
+#    }
+FIN_PASS = ""
+FIN_ACCOUNTS =  {
+    "Statements09012867418726": ["snt","Joint"],
+    "Statements09012910418288": ["snt","Cash"],
+    "DEACONAV01": ["ntw","Personal"],
+    }
+FIN_DOCS = {
+        "Statements09012867418726": SOURCE_DIR+r"\snt",
+        "Statements09012910418288": SOURCE_DIR+r"\snt",
+        "DEACONAV01": SOURCE_DIR+r"\ntw",
+        "fin": MASTER_DIR,
+        # "Annual estimate": ANALYSIS_DIR,
+        "budget_planner": ANALYSIS_DIR,
+        "fin_analysis": ANALYSIS_DIR,
+        "cash_calculator": ANALYSIS_DIR,
+        "AD finances": ANALYSIS_DIR,
+        }
+FIN_GROUPS = {
+    'Council tax': 'o01. In Your Home'
+    , 'Gas+Electricity': 'o01. In Your Home'
+    , 'Home improvement/Move': 'o12. Big One Offs'
+    , 'Home insurance': 'o02. Insurance'
+    , 'Mobile (Adam)': 'o01. In Your Home'
+    , 'Mobile (Mary)': 'o01. In Your Home'
+    , 'Mortgage/Rent': 'o01. In Your Home'
+    , 'TV/Phone/Broadband': 'o01. In Your Home'
+    , 'Water': 'o01. In Your Home'
+    , 'Travel/Holiday': 'o12. Big One Offs'
+    , 'Amnesty': 'o13. Odds & Sods'
+    , 'BCS (Adam)': 'o13. Odds & Sods'
+    , 'Shelter': 'o13. Odds & Sods'
+    , 'Unknown': 'o13. Odds & Sods'
+    , 'Boiler cover': 'o02. Insurance'
+    , 'Groceries': 'o03. Eats, drinks & smokes'
+    , 'Restaurant/Takeaway': 'o03. Eats, drinks & smokes'
+    , 'Car - AA': 'o04. Motoring & Public Transport'
+    , 'Car - DVLA': 'o04. Motoring & Public Transport'
+    , 'Car - petrol': 'o04. Motoring & Public Transport'
+    , 'Car - service': 'o04. Motoring & Public Transport'
+    , 'Car insurance': 'o04. Motoring & Public Transport'
+    , 'Car park': 'o04. Motoring & Public Transport'
+    , 'Commute': 'o04. Motoring & Public Transport'
+    , 'General': 'o07. Family'
+    , 'Adam': 'o08. Fun & Frolics'
+    , 'Mary': 'o08. Fun & Frolics'
+    , 'Contact lens': 'o09. Health & Beauty'
+    , 'Maternity/child benefit': 'i04. Benefits (Including Child Benefit, Child Tax Credits & Income Support)'
+    , 'Salary (Adam)': 'i01. Income From Employment / Self Employment'
+    , 'Brought forward/dividend': 'i02. Income From Savings & Investments'
+    }
+#code: remoteurl, localfile
+STADIUMS_SCRAPE = {
+        "ops": ["http://opisthokonta.net/wp-content/uploads/2015/03/stadiums_20150302.csv",SOURCE_DIR+"/ops/stadiums/stadiums_20150302.csv"]
+        , "dgl": ["https://www.doogal.co.uk/FootballStadiumsCSV.ashx",SOURCE_DIR+"/dgl/stadiums/stadiums.csv"]
+        }
+
+#code: remoteurl, localfile, attrs
+MANAGERS_SCRAPE = {
+        "prm": ["https://en.wikipedia.org/wiki/List_of_Premier_League_managers"
+                ,"../data/source/wkp/wkp_mgr/wkp_mgr_prm.csv"
+                ,{'class': 'wikitable sortable plainrowheaders'}
+                ,['Manager','ManagerCountry','Team','DateFrom','DateTo','Duration','YearRange','Notes']]
+                #,{'Name': 'Manager','Nat.': 'ManagerCountry', 'Club': 'Team','From': 'DateFrom','Until': 'DateTo','Duration (days)': 'Duration','"Years in\r\nPremier League"': 'YearRange','Ref.': 'Notes'}]
+        , "chm": ["https://en.wikipedia.org/wiki/List_of_EFL_Championship_managers"
+                ,"../data/source/wkp/wkp_mgr/wkp_mgr_chm.csv"
+                ,{'class': 'wikitable sortable'}
+                ,['Manager','ManagerCountry','Team','DateFrom','DateTo','YearRange','Notes']]
+                #,{'Name': 'Manager','Nat.': 'ManagerCountry','Championship club': 'Team','From': 'DateFrom','Until': 'DateTo','"Years in\r\nFLC"': 'YearRange','Ref.': 'Notes'}]
+        }

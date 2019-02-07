@@ -72,7 +72,7 @@ def ensure_dir(f):
 
 def save_master(dframe):
     dframe.to_csv(config.MASTER_FILES["fin_master"], encoding='utf-8', sep='|')
-    print("\n... saved to "+config.MASTER_FILES["fin_master"])
+    print "\n... saved to "+config.MASTER_FILES["fin_master"]
 
 def get_master():
     return pd.read_csv(config.MASTER_FILES["fin_master"], encoding = "utf8", sep='|')
@@ -93,7 +93,7 @@ def func_debit_credit(x):
         return 'Credit', x
 
 def func_account(filename):
-    for key, value in account_dict.items():
+    for key, value in account_dict.iteritems():
         if filename.startswith(key):
             return value[1]
 
@@ -112,7 +112,7 @@ def get_legacy_data():
     df = date_expansion(df)
 
     df['Transaction'] = df['Amount']
-    df['Debit_Credit_Flag'], df['Amount'] = list(zip(*df['Transaction'].map(func_debit_credit)))
+    df['Debit_Credit_Flag'], df['Amount'] = zip(*df['Transaction'].map(func_debit_credit))
     df['Account_Holder'] = "Joint" #df['Filename'].map(func_account)
     df['Type'] = df['Description'].map(get_type)
     df['Description_Clean'] = df['Description'].map(clean_desc)
@@ -144,7 +144,7 @@ def get_statements(filename):
     with open(os.path.join(source_path,filename)) as in_file:
         for line in nonblank_lines(in_file):
             name, var = line.partition(":")[::2]
-            if name != "From":
+            if name <> "From":
                 if name == "Date":
                     i=0
                 else:
@@ -164,7 +164,7 @@ def get_statements(filename):
     df = date_expansion(df)
 
     df['Transaction'] = df['Amount']
-    df['Debit_Credit_Flag'], df['Amount'] = list(zip(*df['Transaction'].map(func_debit_credit)))
+    df['Debit_Credit_Flag'], df['Amount'] = zip(*df['Transaction'].map(func_debit_credit))
     df['Account_Holder'] = df['Filename'].map(func_account)
     df['Type'] = df['Description'].map(get_type)
     df['Description_Clean'] = df['Description'].map(clean_desc)
@@ -177,13 +177,13 @@ def data_validator(df):
     df["checks"] = df["Transaction"].shift(1) + df["Balance"].diff()
     #checks = df[["Filename","Transaction","Balance","checks"]][(df["checks"] > 1) & (df["Filename"].shift(1) == df["Filename"]) & (df["Filename"] <> "fin_legacy.csv")]
     #checks = df[["Account_Holder","Filename","Date","Transaction","Balance","checks"]][(df["checks"] > 1) & (df["Filename"].shift(1) == df["Filename"])]
-    checks = df[["Account_Holder","Filename","Date","Transaction","Balance","checks"]][(df["checks"] >= 1) & (df["Account_Holder"].shift(1) == df["Account_Holder"]) & (df["Filename"] != "fin_legacy.csv")]
+    checks = df[["Account_Holder","Filename","Date","Transaction","Balance","checks"]][(df["checks"] >= 1) & (df["Account_Holder"].shift(1) == df["Account_Holder"]) & (df["Filename"] <> "fin_legacy.csv")]
 
     if not checks.empty:
         limit = 5
-        print("First {0} differences...".format(str(limit)))
-        print(checks.head(limit))
-        print("...")
+        print "First {0} differences...".format(str(limit))
+        print checks.head(limit)
+        print "..."
         sys.exit("Significant diffs found in Balance vs Transactions")
 
 def get_account_data():
@@ -192,13 +192,13 @@ def get_account_data():
     previous_account = ""
     for root, dirs, files in os.walk(source_path, topdown=False):
         for i, filename in enumerate(sorted(files)):
-            print(i, filename)
+            print i, filename
             df_new = get_statements(filename)
             account = filename[10:24]
             if i==0:
                 df = df_new[0:0]
                 df_end = 0 #'000000'
-            elif account != previous_account:
+            elif account <> previous_account:
                 df_end = 0 #'000000'
             else:
                 df_end = df[df["Filename"].str.contains(account)]['DateKey'].max()
@@ -226,7 +226,7 @@ def get_account_data():
     df = df[cols]
 
     data_validator(df)
-    print(df.groupby("Filename").agg({'DateKey': [min, max, "count"]}))
+    print df.groupby("Filename").agg({'DateKey': [min, max, "count"]})
     # df.info()
     # print df.describe(include="all")
     save_master(df)
@@ -239,7 +239,7 @@ def get_feature_vector():
     # Type --> 0/1 flags
     # Description_Clean --> levenshtein distance (from most frequest?)
 
-    print(df["Type"].value_counts().head(7))
+    print df["Type"].value_counts().head(7)
 
     #df.info()
     #print df.describe(include="all")
@@ -252,7 +252,7 @@ def evaluate_algorithms():
     #array = dataset[["Transaction", "Amount", "Balance", "DateKey", "Category_Group"]].values
     array = dataset[["Transaction", "Amount", "Category_Group"]].values
     #print array[:5]
-    print(array.shape)
+    print array.shape
 
     # pick columns to use
     X = array[:,0:1]
@@ -300,20 +300,20 @@ def evaluate_algorithms():
 #    plt.show()
 
     # Make predictions on validation dataset
-    print("\nPrediction using K Nearest Neighbours algorithm...")
+    print "\nPrediction using K Nearest Neighbours algorithm..."
     knn = KNeighborsClassifier()
     knn.fit(X_train, Y_train)
     predictions = knn.predict(X_validation)
-    print((accuracy_score(Y_validation, predictions)))
-    print((confusion_matrix(Y_validation, predictions)))
-    print((classification_report(Y_validation, predictions)))
+    print(accuracy_score(Y_validation, predictions))
+    print(confusion_matrix(Y_validation, predictions))
+    print(classification_report(Y_validation, predictions))
     #print predictions
 
     results = knn.predict(X)
     dataset['Predicted_Category_Group'] = results
     #dataset.info()
     #print dataset.describe(include="all")
-    print(dataset[dataset["Predicted_Category_Group"] != dataset["Category_Group"]].head(1))
+    print dataset[dataset["Predicted_Category_Group"] != dataset["Category_Group"]].head(1)
 #    print dataset.tail(5)
 
 #    print "\nPrediction using Support Vector Clustering algorithm..."
@@ -328,13 +328,13 @@ def get_new_files():
     for filename in os.listdir(config.DOWNLOAD_DIR):
         #print filename
         if filename.startswith(tuple(account_dict.keys())):
-            for prefix in list(account_dict.keys()):
+            for prefix in account_dict.keys():
                 if filename.startswith(prefix):
                     outfile = prefix+"_{0}.".format(datetime.strftime(datetime.now(), '%Y%m%d%H%M'))+filename[-3:] # str(filename.split(".")[-1:])[2:5]
                     #print outfile
-                    print("Moving "+os.path.join(config.DOWNLOAD_DIR, filename)+" to "+os.path.join(config.SOURCE_DIR, account_dict[prefix][0], outfile), end=' ')
+                    print "Moving "+os.path.join(config.DOWNLOAD_DIR, filename)+" to "+os.path.join(config.SOURCE_DIR, account_dict[prefix][0], outfile),
                     os.rename(os.path.join(config.DOWNLOAD_DIR, filename), os.path.join(config.SOURCE_DIR, account_dict[prefix][0], outfile))
-                    print("===> DONE")
+                    print "===> DONE"
 
 def check_thing():
     thing = config.FIN_PASS #raw_input("Enter the thing:")
@@ -356,7 +356,7 @@ def archive_files():
     zAnswer='-y'
     zProg=os.path.join(zPath,zApp)
 
-    for zipprefix, zipfolder in finances_dict.items():
+    for zipprefix, zipfolder in finances_dict.iteritems():
         zipname = os.path.join(zipfolder, zipprefix+".zip")
         filelist=[]
         for filename in os.listdir(zipfolder):
@@ -366,18 +366,18 @@ def archive_files():
         cmd = [zApp, zAction, zipname, zPass, zAnswer] + filelist
         rc = subprocess.Popen(cmd, executable=zProg, stderr=subprocess.STDOUT, stdout=subprocess.PIPE)
         rc_out = rc.stdout.readlines();
-        print(str("rc_out:{0}".format(rc_out)))
+        print str("rc_out:{0}".format(rc_out))
 
         for fileloc in filelist:
-            print("fileloc:{0}".format(fileloc))
+            print "fileloc:{0}".format(fileloc)
             os.remove(fileloc)
 
 def extract_files():
     thing=check_thing()
 
-    for zipprefix, zipfolder in finances_dict.items():
+    for zipprefix, zipfolder in finances_dict.iteritems():
         if os.path.exists(os.path.join(zipfolder, zipprefix+".zip")):
-            print(zipprefix, zipfolder)
+            print zipprefix, zipfolder
             os.chdir(zipfolder)
             archiveZip = zipfile.ZipFile(zipprefix+".zip")
             #archiveZip.extractall()
@@ -389,7 +389,7 @@ def update_fin_analysis(df):
     writer = pd.ExcelWriter(config.MASTER_FILES["fin_datasheet"])
     df.to_excel(writer, sheet_name="fin_master", index=False)
     writer.save()
-    print("... fin_analysis saved")
+    print "... fin_analysis saved"
 
 def update_cash_calculator(df):
     ### TODO add cash_calculator
@@ -418,7 +418,7 @@ def update_budget_planner(df):
 
     ### TODO save with date range in name
     wb.save(config.MASTER_FILES["fin_budget_output"])
-    print("... budget_planner saved")
+    print "... budget_planner saved"
 
 def export_viz(df):
 
@@ -429,8 +429,8 @@ def export_viz(df):
 
     bal = bal.tail(200)
     bal.info()
-    print(bal.describe(include="all"))
-    print(bal.tail(10))
+    print bal.describe(include="all")
+    print bal.tail(10)
 
     bal.plot(kind='line', title="Joint Account Balance", figsize=(30, 10))
 #    plt.show()
@@ -457,7 +457,7 @@ def open_and_wait():
     # print file2
     proc2 = subprocess.Popen(["explorer", file2])
     # print "wait for close"
-    exit_codes = [p.wait() for p in (proc1, proc2)]
+    exit_codes = [p.wait() for p in proc1, proc2]
     # print "all done"
 
 def send_for_analysis():
@@ -488,13 +488,13 @@ def main():
     # open_and_wait()
 
     ### end 2 end
-    print("Step 1: EXTRACTING ARCHIVED FILES...")
+    print "Step 1: EXTRACTING ARCHIVED FILES..."
     extract_files()
-    print("Step 2: GET NEW FILES...")
+    print "Step 2: GET NEW FILES..."
     get_new_files()
-    print("Step 3: GET ACCOUNT DATA...")
+    print "Step 3: GET ACCOUNT DATA..."
     get_account_data()
-    print("Step 4: SEND FOR ANALYSIS...")
+    print "Step 4: SEND FOR ANALYSIS..."
     send_for_analysis()
     # print "Step 5: ARCHIVE FILES..."
     # archive_files()
