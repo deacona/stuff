@@ -13,9 +13,9 @@ from openpyxl import load_workbook
 import subprocess
 import pandas as pd
 from datetime import datetime
-from pandas.tools.plotting import scatter_matrix
+# from pandas.tools.plotting import scatter_matrix
 import numpy as np
-import matplotlib.pyplot as plt
+# import matplotlib.pyplot as plt
 from sklearn import model_selection
 from sklearn.metrics import classification_report
 from sklearn.metrics import confusion_matrix
@@ -36,6 +36,7 @@ account_dict = config.FIN_ACCOUNTS
 finances_dict = config.FIN_DOCS
 group_dict = config.FIN_GROUPS
 
+
 def get_date_dim(start_date):
     df = pd.read_excel(config.MASTER_FILES["date_dim"])
     df = df[df["date key"] >= start_date]
@@ -46,6 +47,7 @@ def get_date_dim(start_date):
     df.columns = df.columns.str.title().str.replace(" ","_")
 
     return df
+
 
 def date_expansion(df):
     df['Date'] = pd.to_datetime(df['Date'], format='%d/%m/%Y')
@@ -65,20 +67,25 @@ def date_expansion(df):
 
     return df
 
+
 def ensure_dir(f):
     d = os.path.dirname(f)
     if not os.path.exists(d):
         os.makedirs(d)
 
+
 def save_master(dframe):
     dframe.to_csv(config.MASTER_FILES["fin_master"], encoding='utf-8', sep='|')
     print("\n... saved to "+config.MASTER_FILES["fin_master"])
 
+
 def get_master():
     return pd.read_csv(config.MASTER_FILES["fin_master"], encoding = "utf8", sep='|')
 
+
 def get_type(x):
     return str(x).split(' TO ')[0].split(' FROM ')[0].split(' AT ')[0].split(' REF ')[0].split(' REF.')[0]
+
 
 def clean_desc(x):
     for start in [' TO ',' FROM ',' AT ',' REF ',' REF.']:
@@ -86,16 +93,19 @@ def clean_desc(x):
             x = x.split(start)[1]
     return str(x).split(',')[0]
 
+
 def func_debit_credit(x):
     if x < 0:
         return 'Debit', (-1 * x)
     else:
         return 'Credit', x
 
+
 def func_account(filename):
     for key, value in account_dict.items():
         if filename.startswith(key):
             return value[1]
+
 
 def get_legacy_data():
     df = pd.read_csv(
@@ -120,6 +130,7 @@ def get_legacy_data():
 
     return df
 
+
 def get_categories():
     df = get_legacy_data()
 
@@ -128,14 +139,17 @@ def get_categories():
 
     return cat
 
+
 def nonblank_lines(f):
     for l in f:
         line = l.rstrip()
         if line:
             yield line
 
+
 def clean_text(row):
     return [r.decode('unicode_escape').encode('ascii', 'ignore') for r in row]
+
 
 def get_statements(filename):
     row_dict = {}
@@ -173,6 +187,7 @@ def get_statements(filename):
     # print df.head(1)
     return df
 
+
 def data_validator(df):
     df["checks"] = df["Transaction"].shift(1) + df["Balance"].diff()
     #checks = df[["Filename","Transaction","Balance","checks"]][(df["checks"] > 1) & (df["Filename"].shift(1) == df["Filename"]) & (df["Filename"] <> "fin_legacy.csv")]
@@ -185,6 +200,7 @@ def data_validator(df):
         print(checks.head(limit))
         print("...")
         sys.exit("Significant diffs found in Balance vs Transactions")
+
 
 def get_account_data():
     ### TODO handle other account formats
@@ -233,6 +249,7 @@ def get_account_data():
 
     return df
 
+
 def get_feature_vector():
     df = get_legacy_data()
     # Transaction
@@ -243,6 +260,7 @@ def get_feature_vector():
 
     #df.info()
     #print df.describe(include="all")
+
 
 def evaluate_algorithms():
     dataset = get_legacy_data()
@@ -324,6 +342,7 @@ def evaluate_algorithms():
 #    print(confusion_matrix(Y_validation, predictions))
 #    print(classification_report(Y_validation, predictions))
 
+
 def get_new_files():
     for filename in os.listdir(config.DOWNLOAD_DIR):
         #print filename
@@ -332,12 +351,14 @@ def get_new_files():
                 if filename.startswith(prefix):
                     outfile = prefix+"_{0}.".format(datetime.strftime(datetime.now(), '%Y%m%d%H%M'))+filename[-3:] # str(filename.split(".")[-1:])[2:5]
                     #print outfile
-                    print("Moving "+os.path.join(config.DOWNLOAD_DIR, filename)+" to "+os.path.join(config.SOURCE_DIR, account_dict[prefix][0], outfile), end=' ')
+                    print("Moving "+os.path.join(config.DOWNLOAD_DIR, filename)+" to "+os.path.join(config.SOURCE_DIR, account_dict[prefix][0], outfile))
                     os.rename(os.path.join(config.DOWNLOAD_DIR, filename), os.path.join(config.SOURCE_DIR, account_dict[prefix][0], outfile))
                     print("===> DONE")
 
+
 def check_thing():
-    thing = config.FIN_PASS #raw_input("Enter the thing:")
+    # thing = config.FIN_PASS
+    thing = raw_input("Enter the thing:")
     if len(thing) == 0:
         sys.exit("thing cannot be empty")
     elif re.match('^[\w]+$', thing) is None:
@@ -345,6 +366,7 @@ def check_thing():
     else:
 #        sys.exit("all good")
         return thing
+
 
 def archive_files():
     thing=check_thing()
@@ -372,6 +394,7 @@ def archive_files():
             print("fileloc:{0}".format(fileloc))
             os.remove(fileloc)
 
+
 def extract_files():
     thing=check_thing()
 
@@ -385,15 +408,18 @@ def extract_files():
             archiveZip.close()
             os.remove(os.path.join(zipfolder, zipprefix+".zip"))
 
+
 def update_fin_analysis(df):
     writer = pd.ExcelWriter(config.MASTER_FILES["fin_datasheet"])
     df.to_excel(writer, sheet_name="fin_master", index=False)
     writer.save()
     print("... fin_analysis saved")
 
+
 def update_cash_calculator(df):
     ### TODO add cash_calculator
     pass
+
 
 def update_budget_planner(df):
     inputs = df[df["Date"] >= df["Same_Day_Year_Ago"].max()].groupby("Category_Group").sum()["Transaction"].abs()
@@ -432,7 +458,7 @@ def export_viz(df):
     print(bal.describe(include="all"))
     print(bal.tail(10))
 
-    bal.plot(kind='line', title="Joint Account Balance", figsize=(30, 10))
+    # bal.plot(kind='line', title="Joint Account Balance", figsize=(30, 10))
 #    plt.show()
 
 #    dfplot.set_xlabel("Year")
@@ -460,6 +486,7 @@ def open_and_wait():
     exit_codes = [p.wait() for p in (proc1, proc2)]
     # print "all done"
 
+
 def send_for_analysis():
     df = get_master()
 
@@ -472,6 +499,15 @@ def send_for_analysis():
     export_viz(df)
 
     open_and_wait()
+
+
+def check_with_user(text):
+    userInput = raw_input((text+" (y/n): ").rjust(50))
+    if userInput[:1].lower() == "y":
+        return True
+    else:
+        return False
+
 
 def main():
     ### test components
@@ -486,18 +522,20 @@ def main():
     #data_validator(get_master())
     #export_viz(get_master())
     # open_and_wait()
+    # print(check_with_user("TEST TEXT"))
 
     ### end 2 end
-    print("Step 1: EXTRACTING ARCHIVED FILES...")
-    extract_files()
-    print("Step 2: GET NEW FILES...")
-    get_new_files()
-    print("Step 3: GET ACCOUNT DATA...")
-    get_account_data()
-    print("Step 4: SEND FOR ANALYSIS...")
-    send_for_analysis()
-    # print "Step 5: ARCHIVE FILES..."
-    # archive_files()
+    if check_with_user("Step 1: EXTRACTING ARCHIVED FILES"):
+        extract_files()
+    if check_with_user("Step 2: GET NEW FILES"):
+        get_new_files()
+    if check_with_user("Step 3: GET ACCOUNT DATA"):
+        get_account_data()
+    if check_with_user("Step 4: SEND FOR ANALYSIS"):
+        send_for_analysis()
+    if check_with_user("Step 5: ARCHIVE FILES"):
+        archive_files()
+
 
 if __name__ == '__main__':
     main()
