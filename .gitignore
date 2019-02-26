@@ -1,3 +1,5 @@
 
+*.ini
 *.pyc
 config.py
+/*
