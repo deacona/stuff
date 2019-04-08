@@ -468,7 +468,7 @@ def get_new_files():
 
 def check_thing():
     # thing = config.FIN_PASS
-    thing = raw_input("Enter the thing:")
+    thing = input("Enter the thing:")
     if len(thing) == 0:
         sys.exit("thing cannot be empty")
     elif re.match("^[\w]+$", thing) is None:
@@ -631,7 +631,7 @@ def send_for_analysis():
 
 
 def check_with_user(text):
-    userInput = raw_input((text + " (y/n): ").rjust(50))
+    userInput = input((text + " (y/n): ").rjust(50))
     if userInput[:1].lower() == "y":
         return True
     else:
