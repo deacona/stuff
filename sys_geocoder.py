@@ -8,7 +8,9 @@ Created on Wed 6th Feb 2019
 import geocoder
 import logging
 
-logging.basicConfig(format='%(asctime)s - %(levelname)s - %(message)s', level=logging.DEBUG)
+logging.basicConfig(
+    format="%(asctime)s - %(levelname)s - %(message)s", level=logging.DEBUG
+)
 
 addresses = ["google london office", "1-13 St Giles High St", "WC2H 8AG"]
 
@@ -36,8 +38,8 @@ def get_geocoded_results(address):
         }
 
     # Append some other details:
-    output['input_string'] = address
-    output['number_of_results'] = 1
+    output["input_string"] = address
+    output["number_of_results"] = 1
 
     return output
 
@@ -58,9 +60,11 @@ for address in addresses:
             logging.error("Skipping!")
             geocoded = True
 
-        if geocode_result['status'] != 'OK':
-            logging.warning("Error geocoding {}: {}".format(address, geocode_result['status']))
-        logging.debug("Geocoded: {}: {}".format(address, geocode_result['status']))
+        if geocode_result["status"] != "OK":
+            logging.warning(
+                "Error geocoding {}: {}".format(address, geocode_result["status"])
+            )
+        logging.debug("Geocoded: {}: {}".format(address, geocode_result["status"]))
         results.append(geocode_result)
         geocoded = True
 
