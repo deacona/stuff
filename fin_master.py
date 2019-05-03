@@ -188,8 +188,8 @@ def nonblank_lines(f):
             yield line
 
 
-def clean_text(row):
-    return [r.decode("unicode_escape").encode("ascii", "ignore") for r in row]
+# def clean_text(row):
+#     return [r.decode("unicode_escape").encode("ascii", "ignore") for r in row]
 
 
 def get_statements(filename):
@@ -212,9 +212,9 @@ def get_statements(filename):
 
     df = df.drop_duplicates()
     df["Filename"] = filename
-    df[["Account", "Amount", "Balance", "Date", "Description"]] = df[
-        ["Account", "Amount", "Balance", "Date", "Description"]
-    ].apply(clean_text)
+    # df[["Account", "Amount", "Balance", "Date", "Description"]] = df[
+    #     ["Account", "Amount", "Balance", "Date", "Description"]
+    # ].apply(clean_text)
     df["Amount"] = pd.to_numeric(df["Amount"].str.replace("GBP", ""), errors="coerce")
     df["Balance"] = pd.to_numeric(df["Balance"].str.replace("GBP", ""), errors="coerce")
 
@@ -281,7 +281,7 @@ def get_account_data():
 
     old = get_legacy_data()
     old_end = old["DateKey"].max()
-    df = pd.concat([df[df["DateKey"] > old_end], old])
+    df = pd.concat([df[df["DateKey"] > old_end], old], sort=True)
 
     df["Category_Group"] = df["Category"].map(group_dict)
     df["Category_Group"].fillna(config.FIN_GROUPS["Unknown"], inplace=True)
@@ -475,7 +475,7 @@ def check_thing():
         sys.exit("thing has invalid chars")
     else:
         #        sys.exit("all good")
-        return thing
+        return thing.encode("utf-8")
 
 
 def archive_files():
