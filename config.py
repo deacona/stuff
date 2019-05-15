@@ -6,10 +6,19 @@ import csv
 conf = configparser.RawConfigParser()
 conf.read("config.ini")
 
+def csv_to_dict(filename):
+    reader = csv.reader(open(os.path.join(MASTER_DIR, filename), 'r'))
+    d = {}
+    for row in reader:
+       k, v = row
+       d[k] = v
+    return d
+
 DOWNLOAD_DIR = conf["PROJECT"]["DOWNLOAD_DIR"]
 SOURCE_DIR = conf["PROJECT"]["SOURCE_DIR"]
 MASTER_DIR = conf["PROJECT"]["MASTER_DIR"]
 ANALYSIS_DIR = conf["PROJECT"]["ANALYSIS_DIR"]
+
 MASTER_FILES = {
     "pop_results": os.path.join(MASTER_DIR, "pop_results.txt"),
     "fin_master": os.path.join(MASTER_DIR, "fin_master.txt"),
@@ -19,24 +28,7 @@ MASTER_FILES = {
     "fin_budget_template": os.path.join(ANALYSIS_DIR, "budget_planner_TEMPLATE.xlsx"),
     "fin_budget_output": os.path.join(ANALYSIS_DIR, "budget_planner_TEST.xlsx"),
 }
-UK_PARTIES = {
-    "Conservative": "Regressive",
-    "UKIP": "Regressive",
-    "BNP": "Regressive",
-    "Referendum": "Regressive",
-    "SNP": "Progressive",
-    "Green": "Progressive",
-    "Labour": "Progressive",
-    "Liberal Democrat": "Progressive",
-    "Liberal": "Progressive",
-    "SDP-Liberal Alliance": "Progressive",
-    "SDP\u2013Liberal Alliance": "Progressive",
-    "Plaid Cymru": "Progressive",
-}
-# UK_PARTIES = {
-#    'Conservative': 'Conservative'
-#    , 'Labour': 'Labour'
-#    }
+UK_PARTIES = csv_to_dict("pop_parties.csv")
 FIN_PASS = conf["THING"]["PASSWORD"]
 FIN_ACCOUNTS = {
     conf["ACCOUNT01"]["CODE"]: [conf["ACCOUNT01"]["WITH"], conf["ACCOUNT01"]["NAME"]],
@@ -54,12 +46,4 @@ FIN_DOCS = {
     "cash_calculator": ANALYSIS_DIR,
     "AD finances": ANALYSIS_DIR,
 }
-print(FIN_ACCOUNTS)
-def get_fin_groups():
-    reader = csv.reader(open(os.path.join(MASTER_DIR, "fn_groups.csv"), 'r'))
-    d = {}
-    for row in reader:
-       k, v = row
-       d[k] = v
-    return d
-FIN_GROUPS = get_fin_groups()
+FIN_GROUPS = csv_to_dict("fn_groups.csv")
