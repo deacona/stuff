@@ -467,8 +467,8 @@ def get_new_files():
 
 
 def check_thing():
-    # thing = config.FIN_PASS
-    thing = input("Enter the thing:")
+    thing = config.FIN_PASS
+    # thing = input("Enter the thing:")
     if len(thing) == 0:
         sys.exit("thing cannot be empty")
     elif re.match("^[\w]+$", thing) is None:
