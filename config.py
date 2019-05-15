@@ -10,10 +10,6 @@ DOWNLOAD_DIR = conf["PROJECT"]["DOWNLOAD_DIR"]
 SOURCE_DIR = conf["PROJECT"]["SOURCE_DIR"]
 MASTER_DIR = conf["PROJECT"]["MASTER_DIR"]
 ANALYSIS_DIR = conf["PROJECT"]["ANALYSIS_DIR"]
-# DOWNLOAD_DIR = r"C:\\Users\\adeacon\\Downloads"
-# SOURCE_DIR = r"C:\Users\adeacon\Google Drive\projects\data\source"
-# MASTER_DIR = r"C:\Users\adeacon\Google Drive\projects\data\master"
-# ANALYSIS_DIR = r"C:\Users\adeacon\Google Drive\projects\analysis"
 MASTER_FILES = {
     "pop_results": os.path.join(MASTER_DIR, "pop_results.txt"),
     "fin_master": os.path.join(MASTER_DIR, "fin_master.txt"),
