@@ -7,8 +7,8 @@ attrs=19.1.0=py_0
 beautifulsoup4=4.7.1=py37_1
 black=19.3b0=py_0
 blas=1.0=mkl
-ca-certificates=2018.03.07=0
-certifi=2018.11.29=py37_0
+ca-certificates=2019.1.23=0
+certifi=2019.3.9=py37_0
 cffi=1.11.5=py37h74b6da3_1
 chardet=3.0.4=py37_1
 click=7.0=py_0
@@ -38,7 +38,7 @@ numpy=1.16.2=py37h19fb1c0_0
 numpy-base=1.16.2=py37hc3f5095_0
 olefile=0.46=py37_0
 openpyxl=2.6.1=py37_1
-openssl=1.1.1a=he774522_0
+openssl=1.1.1b=he774522_1
 pandas=0.24.2=py37ha925a31_0
 pillow=5.2.0=py37h08bbbbd_0
 pip=18.1=py37_0
@@ -67,7 +67,7 @@ sqlite=3.26.0=he774522_0
 tk=8.6.7=vc14hb68737d_1
 toml=0.10.0=py_0
 tornado=6.0.2=py37he774522_0
-urllib3=1.24.1=py37_0
+urllib3=1.24.2=py37_0
 vc=14.1=h0510ff6_4
 vs2015_runtime=14.15.26706=h3a45250_0
 wheel=0.32.3=py37_0
