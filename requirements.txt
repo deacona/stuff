@@ -7,8 +7,8 @@ attrs=19.1.0=py_0
 beautifulsoup4=4.7.1=py37_1
 black=19.3b0=py_0
 blas=1.0=mkl
-ca-certificates=2019.1.23=0
-certifi=2019.3.9=py37_0
+ca-certificates=2020.1.1=0
+certifi=2020.4.5.1=py37_0
 cffi=1.11.5=py37h74b6da3_1
 chardet=3.0.4=py37_1
 click=7.0=py_0
